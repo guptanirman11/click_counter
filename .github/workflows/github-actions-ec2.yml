@@ -1,0 +1,44 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Copy files to EC2
+      uses: appleboy/scp-action@master
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_HOST }}
+        REMOTE_HOST: ${{ secrets.HOST_DNS }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        TARGET: ${{ secrets.TAREGT_DIR }}
+      with:
+        source: "."
+        target: "/path/to/deployment"
+
+    - name: Deploy application
+      uses: appleboy/ssh-action@master
+      env:
+        HOST: ${{ secrets.HOST_DNS }}
+        USERNAME: ${{ secrets.USERNAME }}
+        KEY: ${{ secrets.EC2_SSH_KEY }}
+      with:
+        script: |
+          cd /home/ec2-user/app
+          pip install -r requirements.txt
+          pip install gunicorn
+          export FLASK_APP=application:application
+          gunicorn -b 0.0.0.0:5000 -w 4 application:application
+
+
+
+
+
+          

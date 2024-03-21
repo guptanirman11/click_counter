@@ -13,7 +13,7 @@ function incrementCounter() {
 }
 
 function fetchGlobalCounter() {
-    return fetch('http://127.0.0.1:5001/counter', { method: 'GET' })
+    return fetch('http://3.89.220.49:5000/counter', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
             setLocalCounter(data.counter);
@@ -25,7 +25,7 @@ function fetchGlobalCounter() {
 }
 
 function updateGlobalCounter() {
-    fetch('http://127.0.0.1:5001/click', { method: 'POST' })
+    fetch('http://3.89.220.49:5000/click', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             // setLocalCounter(data.counter);
