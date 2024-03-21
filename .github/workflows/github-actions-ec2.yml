@@ -15,7 +15,7 @@ jobs:
     - name: Copy files to EC2
       uses: appleboy/scp-action@master
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_HOST }}
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         REMOTE_HOST: ${{ secrets.HOST_DNS }}
         REMOTE_USER: ${{ secrets.USERNAME }}
         TARGET: ${{ secrets.TAREGT_DIR }}
