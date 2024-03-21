@@ -7,7 +7,7 @@ Type=idle
 Restart=on-failure
 User=ec2-user
 WorkingDirectory=/home/ec2-user/app
-ExecStart=/bin/bash -c '/home/ec2-user/app/gunicorn -b 0.0.0.0:5000 application:application'
+ExecStart=/usr/local/bin/gunicorn -b 0.0.0.0:5000 application:application
 
 [Install]
 WantedBy=multi-user.target
