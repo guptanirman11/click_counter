@@ -21,6 +21,7 @@ jobs:
         target: ${{ secrets.TARGET_DIR }}
         port: 22
         source: "."
+        args: -vvv 
 
     - name: Deploy application
       uses: appleboy/ssh-action@master
