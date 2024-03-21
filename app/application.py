@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 import redis
 import threading
@@ -6,16 +6,17 @@ import time
 from queue import Queue
 
 app = Flask(__name__)
-CORS(app)
+application = app
+CORS(application)
 
-# Initialize Redis connection
+# Initializing Redis connection
 redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
-# Initialize a thread-safe queue for increment actions
+# Initializing a thread-safe queue for increment actions
 increment_queue = Queue()
 
 def fetch_db_value():
-    # Use Redis GET. If the key doesn't exist, initialize it to 0.
+    # fetching value from Redis
     value = redis_conn.get('counter') or 0
     print(f'fetched: {value}')
     return int(value)
@@ -24,18 +25,28 @@ def fetch_db_value():
 def consumer():
     """Consumer function that processes items from the queue."""
     while True:
-        # Wait for an item from the queue
-        increment = increment_queue.get()
-        # Process the increment
-        redis_conn.incrby('counter', increment)
-        print(f"Processed increment: {increment}")
-        # Indicate that the item has been processed
-        increment_queue.task_done()
 
+        # Wait for an item from the queue
+        if not increment_queue.empty():
+            
+            increment = increment_queue.get()
+            # Process the increment
+            redis_conn.incrby('counter', increment)
+            print(f"Processed increment: {increment}")
+            # Indicating that the item has been processed
+            increment_queue.task_done()
+
+"""Start the background thread."""
+thread = threading.Thread(target=consumer, daemon=True)
+thread.start()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/click', methods=['POST'])
 def click():
-    # Enqueue an increment action instead of directly incrementing the counter
+    # Enqueue an increment action
     increment_queue.put(1)
     return jsonify({'message': 'Increment queued'}), 200
 
@@ -46,6 +57,5 @@ def get_counter():
     return jsonify({'counter': current_counter}), 200
 
 if __name__ == '__main__':
-    # Start the background thread
-    threading.Thread(target=consumer, daemon=True).start()
-    app.run(debug=True, use_reloader=False)
+    # Runnign the Flask app
+    application.run(debug=True, use_reloader=False)
