@@ -14,11 +14,11 @@ jobs:
       
     - name: Copy files to EC2
       uses: appleboy/scp-action@master
-      env:
+      with:
         key: ${{ secrets.EC2_SSH_KEY }}
         host: ${{ secrets.HOST_DNS }}
         username: ${{ secrets.USERNAME }}
-        TARGET: ${{ secrets.TARGET_DIR }}
+        target: ${{ secrets.TARGET_DIR }}
         port: 22
         source: "."
 
@@ -38,8 +38,3 @@ jobs:
           gunicorn -b 0.0.0.0:5000 -w 4 application:application
         args: -vvv 
 
-
-
-
-
-          
