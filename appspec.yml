@@ -6,7 +6,7 @@ files:
 hooks:
   
   ApplicationStart:
-    - location: codedeploy-scripts/start_server
+    - location: code_deploy-scripts/start_server
       timeout: 300
       runas: root
   
