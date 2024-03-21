@@ -31,6 +31,7 @@ jobs:
         KEY: ${{ secrets.EC2_SSH_KEY }}
       with:
         script: |
+          sudo apt-get -y update
           cd /home/ec2-user/app
           pip install -r requirements.txt
           pip install gunicorn
