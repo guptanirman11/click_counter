@@ -15,13 +15,12 @@ jobs:
     - name: Copy files to EC2
       uses: appleboy/scp-action@master
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        REMOTE_HOST: ${{ secrets.HOST_DNS }}
-        REMOTE_USER: ${{ secrets.USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        host: ${{ secrets.HOST_DNS }}
+        username: ${{ secrets.USERNAME }}
         TARGET: ${{ secrets.TARGET_DIR }}
-      # with:
-      #   source: "."
-      #   target: "/path/to/deployment"
+        port: 22
+        source: "."
 
     - name: Deploy application
       uses: appleboy/ssh-action@master
