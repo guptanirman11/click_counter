@@ -3,14 +3,15 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/
+    overwrite: true
+file_exists_behavior: OVERWRITE
 hooks:
-  BeforeInstall:
-    - location: code_deploy_scripts/cleanup.sh
+  AfterInstall:
+    - location: code_deploy_scripts/install_dependencies.sh
       timeout: 300
       runas: root
-  
+	  
   ApplicationStart:
-    - location: code_deploy_scripts/start_server.sh
+    - location: code_deploy_scripts/start_service.sh
       timeout: 300
       runas: root
-  
