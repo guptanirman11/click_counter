@@ -4,17 +4,23 @@ on:
   push:
     branches:
       - main 
+env:
+  AWS_REGION: 'us-east-1' # e.g., us-east-1
+  REMOTE_HOST: ${{ secrets.HOST_DNS }} # e.g., ec2-xx-xxx-xxx-xxx.compute-1.amazonaws.com
+  REMOTE_USER: ec2-user # Default for Amazon Linux AMI
+  TARGET_DIR: /home/ec2-user/ # Target directory for deployment on your EC2
+
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
       
     - name: Copy files to EC2
-      uses: easingthemes/ssh-deploy@main
-      env:
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         REMOTE_HOST: ${{ secrets.HOST_DNS }}
         REMOTE_USER: ${{ secrets.USERNAME }}
@@ -22,7 +28,7 @@ jobs:
         
 
     - name: Deploy application
-      uses: appleboy/ssh-action@master
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         host: ${{ secrets.HOST_DNS }}
         username: ${{ secrets.USERNAME }}
