@@ -10,7 +10,7 @@ application = app
 CORS(application)
 
 # Initializing Redis connection
-redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+redis_conn = redis.StrictRedis(host='my-redis-cluster.0diz5e.ng.0001.use1.cache.amazonaws.com', port=6379, db=0, decode_responses=True)
 
 # Initializing a thread-safe queue for increment actions
 increment_queue = Queue()
