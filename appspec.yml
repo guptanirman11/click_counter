@@ -5,12 +5,12 @@ files:
     destination: /home/ec2-user/
 hooks:
   BeforeInstall:
-    - location: code_deploy-scripts/cleanup.sh
+    - location: code_deploy_scripts/cleanup.sh
       timeout: 300
       runas: root
   
   ApplicationStart:
-    - location: code_deploy-scripts/start_server.sh
+    - location: code_deploy_scripts/start_server.sh
       timeout: 300
       runas: root
   
