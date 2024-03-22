@@ -4,6 +4,9 @@ import redis
 import threading
 import time
 from queue import Queue
+import boto3
+
+cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')
 
 app = Flask(__name__)
 application = app
@@ -48,6 +51,24 @@ def index():
 def click():
     # Enqueue an increment action
     increment_queue.put(1)
+    print("Click Registered")
+    # Send custom metric data to CloudWatch
+    cloudwatch.put_metric_data(
+        Namespace='MyApplication',
+        MetricData=[
+            {
+                'MetricName': 'Clicks',
+                'Dimensions': [
+                    {
+                        'Name': 'Application',
+                        'Value': 'MyClickCounterApp'
+                    },
+                ],
+                'Unit': 'Count/Second',
+                'Value': 1
+            },
+        ]
+    )
     return jsonify({'message': 'Increment queued'}), 200
 
 @app.route('/counter', methods=['GET'])
