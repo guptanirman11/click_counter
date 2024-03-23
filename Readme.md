@@ -1,19 +1,33 @@
-## Architectural Design
-For the Backend logic of Counter, two possible design patterns were Observer and Singleton. However, for observer the users are notfied at an event and keep a track of users which is not required for Counter, whereas Singleton pattern will make sure that only one instance of Counter is created and used
+## Introduction
+The project focuses on developing a scalable application architecture to handle write-heavy operations, particularly prioritizing click storage over immediate display updates. To achieve this, I explored and implemented two different approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and robust monitoring through CloudWatch.
 
-## Strong V/S Eventual Consisteny
-If we go for Strong Cinsistncy then the Workload would be higher and their will be latency to update value when there are 100s of requests. Eventual COnsistency will help us make sure that at the end all the inputs are being monitored and stored properly.
+## BackendApproaches Explored
+Approach 1: Global Variable with Database Sync
+This approach involves using a thread-safe operation(lock as supported in Python) on a global variable(using Singleton Pattern) to track clicks, with eventual synchronization with the database. 
 
-## Database choice
-I have decided to use a cache db such as redis or Elasticcache in AWS. I choose a cache db due to the performance, availability and scalability. As the number of writes and fetches are high as one user can click multiple times so in order to make it concurrent safe as well.
+Approach 2: Producer-Consumer Model with Queue
+Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread. Here we will be updating the delta to counter in the RedisCache.
 
+### I decided to use the later approach as blocking a resource which would have been the global counter in the first case is not the most optimal because with locks the bottleneck and performance issues will arise as the other threads and requests will keep on spinnind and try to register their count.
 
-### Things I have tried
-I am trying two version 
-1) Having a thread-safe operation to global variable and then eventually making it consistent across users from db
-2) Having a thread safe queue where each user requests are stored and a pull worker will keep ontry to fetch the new values if it is not empty. This mimics the producer consumer model where producer does not process if queue is empty.
+## Live Updates
+Live updates are implemented with a periodic API call to the backend service every 5 seconds, balancing real-time updates with performance considerations to avoid unnecessary API calls. This could be changed eventually.
 
-### aws architecture
-Used ec2, elastic cache for deploying the website. As there was a need for background thread running I decided to use ec2 over lambda function. Though we can mimic the behaviour by using a sqs queue to create event of triggering the value update in redis cache but due to time constraint I decided to go with EC2 instance. I created a file to automate the cloud infrastructure process and used boto3 for the same. After that i will add a CI/CD pipeline connected to public repo and attach cloudwatch logging system for the same.
-CI/CD pipeline - for the the pipeline I initilly tries using github actions and aws code build however, due to technical errors and time constraint I switched to Code Pipeline as it is more starightforward. Built the appspec.yml file for codebuild and reqquired scripts for Afterinstall, ApplicationStart. One chanllenge I faced that to run my app I had to run it into background which cause problem when deploying again as SpplicationStop need to reap all the backgrpund process so I used systemstl, app.service file to automate the process . Additionally I have added error logs and general logs in app/log folders with respective files.
-CLoudwatch
+## Consistency Management
+I decided to adopt an eventual consistency model to handle high workloads without introducing significant latency. While strong consistency ensures immediate updates, eventual consistency ensures that all inputs are eventually processed, optimizing performance under heavy load.
+
+## Database Choice
+The decision to use a cache database like Redis or Elasticache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent safety.
+
+## AWS Architecture
+The application is deployed on AWS using EC2 instances and Elasticache for caching. The choice of EC2 over Lambda was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline for streamlined deployment. I scripted an appspec.yml file which utilises bach scripts inside code_deploy_scripts. 
+
+CloudWatch is utilized for comprehensive monitoring, including custom metric data reporting via Boto3 for Clicks. You could find it under "Namespace" MyApplication for Metric Name Clicks. This sends the frequency of the clicks which can be seen in the metrics and various options could be used to check total counts, avaergae, sum counts with time. It usually takes 5mins to show the clicks on the graph as it shows the graph when the next 5min time comes on x-axis.
+
+Using the IAM User functionality on AWS, I created the two 'roles' -- that of OWNER and AUDITOR. The credentials for accessing the AWS Management Console for each role are housed here. The OWNER role has full access to all administrator permissions and can make changes to the architecture. The AUDITOR role can also access metrics pertaining to the database, the CloudWatch, and the code deployment infrastructure. 
+
+## Scope for Improvement
+To enhance security, HTTPS can be implemented using a registered Domain Name system, though cost considerations influenced the decision for time being. Load balancing and scaling strategies can be employed to handle increasing server demands, alongside optimizations like increasing pull workers for faster queue processing (however, one drawback for this strategy might be that we might have to use multi-threading appraoches for avoiding race conditions). Integration of SQS instead of a custom thread-safe queue can further improve scalability and efficiency.
+
+## Conclusion
+The architectural design and implementation of the project aim to strike a balance between scalability, performance, and cost-effectiveness. By leveraging AWS services, employing efficient design patterns, and considering future scalability needs, the system is well-equipped to handle write-heavy workloads while maintaining optimal performance and reliability.

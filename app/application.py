@@ -6,6 +6,7 @@ import time
 from queue import Queue
 import boto3
 
+# Connecting with Cloudwatch to log the metrics
 cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ CORS(application)
 # Initializing Redis connection
 redis_conn = redis.StrictRedis(host='my-redis-cluster.0diz5e.ng.0001.use1.cache.amazonaws.com', port=6379, db=0, decode_responses=True)
 
-# Initializing a thread-safe queue for increment actions
+# Initializing a thread-safe queue for counter increment actions
 increment_queue = Queue()
 
 def fetch_db_value():
@@ -39,14 +40,16 @@ def consumer():
             # Indicating that the item has been processed
             increment_queue.task_done()
 
-"""Start the background thread."""
+"""Starting the background thread."""
 thread = threading.Thread(target=consumer, daemon=True)
 thread.start()
 
+'''Rendering the wesite isung rest api endpoint'''
 @app.route('/')
 def index():
     return render_template('index.html')
 
+'''Post method called everytime a click is made'''
 @app.route('/click', methods=['POST'])
 def click():
     # Enqueue an increment action
@@ -71,6 +74,7 @@ def click():
     )
     return jsonify({'message': 'Increment queued'}), 200
 
+'''Get method to fetch the Click Value aiding in implementing the live updates'''
 @app.route('/counter', methods=['GET'])
 def get_counter():
     # Return the most up-to-date counter value from Redis
