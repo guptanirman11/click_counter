@@ -15,7 +15,6 @@ The following are the key elements of this project (and repository):
       * [`application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/application.py): the backend framework listening to the API calls, also makes CloudWatch API calls to log metrics 
       * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ElastiCache)
       * [`test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
-        
        ![image](https://github.com/guptanirman11/click_counter/assets/114794173/c49f3f17-344c-433f-a142-52dfec57fbfc)
        *Screenshot showing succesfull run of test-cases*
       
