@@ -6,6 +6,8 @@ This project is a demonstration of CI/CD implementation for deploying a cloud-ho
 * Live updates have been implemented, in a judicious manner.
 * The application runs on every code commit to this repository which is a part of a CI/CD pipeline connecting it to a secure cloud infrastructure with multiple user-roles and a record of metrics/logs.
 * Logs from the Flask application are documented to allow for debugging, testing, and performance monitoring.
+* ![image](https://github.com/guptanirman11/click_counter/assets/114794173/c49f3f17-344c-433f-a142-52dfec57fbfc)
+
 
 ## User Guide 
 The following are the key elements of this project (and repository):
