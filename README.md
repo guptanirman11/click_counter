@@ -26,10 +26,10 @@ Below, I discuss some of these elements in depth, as well as detail some discuss
 The project focuses on developing a scalable application architecture to handle write-heavy operations, particularly prioritizing click storage over immediate display updates. To achieve this, I explored and implemented two different approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and robust monitoring through CloudWatch.
 
 ## Backend Approaches Explored
-* _**Approach 1: Global Variable with Database Sync**_
+* _**Approach 1: Global Variable with Database Sync**_:
 This approach involves using a thread-safe operation (lock as supported in Python) on a global variable (using Singleton Pattern) to track clicks, with eventual synchronization with the database. 
 
-* _**Approach 2: Producer-Consumer Model with Queue**_
+* _**Approach 2: Producer-Consumer Model with Queue**_:
 Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread. Here we will be updating the delta to counter in the RedisCache.
 
 **I decided to use the later approach as blocking a resource which would have been the global counter in the first case is not the most optimal -- with locks the bottleneck and performance issues will arise as the other threads and requests will keep on spinnind and try to register their count.**
