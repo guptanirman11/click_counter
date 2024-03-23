@@ -16,9 +16,8 @@ The following are the key elements of this project (and repository):
       * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ElastiCache)
       * [`test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
         
-       | ![image](https://github.com/guptanirman11/click_counter/assets/114794173/c49f3f17-344c-433f-a142-52dfec57fbfc) |
-       |:--:|
-       |  *Screenshot showing succesfull run of test-cases* |
+       ![image](https://github.com/guptanirman11/click_counter/assets/114794173/c49f3f17-344c-433f-a142-52dfec57fbfc)
+       *Screenshot showing succesfull run of test-cases*
       
       * [`templates`](https://github.com/guptanirman11/click_counter/tree/main/app/templates) and [`static`](https://github.com/guptanirman11/click_counter/tree/main/app/static) directories: [`.html`](https://github.com/guptanirman11/click_counter/blob/main/app/templates/index.html), [`.css`](https://github.com/guptanirman11/click_counter/blob/main/app/static/styles.css), and [`.js`](https://github.com/guptanirman11/click_counter/blob/main/app/static/script.js) files required for rendering front-end
       * [`logs`](https://github.com/guptanirman11/click_counter/tree/main/app/logs) directory: [`access.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/access.log) and [`error.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/error.log) files documenting Flask application logs
