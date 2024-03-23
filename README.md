@@ -16,7 +16,7 @@ The following are the key elements of this project (and repository):
 * The final product is **[this website](http://3.89.220.49:5000)** which is called the `Cloud Clicker` -- a click counter housed on a cloud infrastructure (link: [http://3.89.220.49:5000](http://3.89.220.49:5000)).
 *  The [`app`](https://github.com/guptanirman11/click_counter/tree/main/app) directory on this repository contains the backend and frontend files:
       * [`application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/application.py): the backend framework listening to the API calls, also makes CloudWatch API calls to log metrics 
-      * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ElastiCache)
+      * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ache)
       * [`test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
       * [`templates`](https://github.com/guptanirman11/click_counter/tree/main/app/templates) and [`static`](https://github.com/guptanirman11/click_counter/tree/main/app/static) directories: [`.html`](https://github.com/guptanirman11/click_counter/blob/main/app/templates/index.html), [`.css`](https://github.com/guptanirman11/click_counter/blob/main/app/static/styles.css), and [`.js`](https://github.com/guptanirman11/click_counter/blob/main/app/static/script.js) files required for rendering front-end
       * [`logs`](https://github.com/guptanirman11/click_counter/tree/main/app/logs) directory: [`access.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/access.log) and [`error.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/error.log) files documenting Flask application logs
@@ -28,7 +28,7 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Introduction
-The project focuses on developing a scalable application architecture to handle write-heavy operations, particularly prioritizing click storage over immediate display updates. To achieve this, I explored and implemented two different approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and robust monitoring through CloudWatch.
+The project focuses on developing a scalable application architecture to handle write-heavy operations, particularly prioritizing click storage over immediate display updates. To achieve this, I explored and implemented two different approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ache, with a streamlined CI/CD pipeline using AWS CodePipeline and robust monitoring through CloudWatch.
 
 ## Backend Approaches Explored
 * _**Approach 1: Global Variable with Database Sync**_:
@@ -46,12 +46,15 @@ Live updates are implemented with a periodic API call to the backend service eve
 I decided to adopt an eventual consistency model to handle high workloads without introducing significant latency. While strong consistency ensures immediate updates, eventual consistency ensures that all inputs are eventually processed, optimizing performance under heavy load.
 
 ## Database Choice
-The decision to use a cache database like Redis or ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent safety.
+The decision to use a cache database like Redis or ache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent safety.
 
 ## AWS Architecture
-The application is deployed on AWS using EC2 instances and Elasticache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
+The application is deployed on AWS using EC2 instances and ache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
 
 AWS CloudWatch is utilized for comprehensive monitoring, including reporting custom metric data via Boto3 to track the count of clicks. You can locate it under the "MyApplication" namespace with the customised metric name "Clicks". This provides insights into the frequency of clicks, enabling analysis through various options such as total counts, averages, and sum counts over time. Graphical representation typically updates every 5 minutes, aligning with intervals on the x-axis. Multiple other default metrics can also be viewed.
+
+![image](https://github.com/guptanirman11/click_counter/assets/114794173/ccf5d090-ee61-43d4-aa47-aab771113ded)
+
 
 Using the IAM User functionality on AWS, I created the two 'roles' for access -- that of `OWNER` and `AUDITOR`. The credentials for accessing the AWS Management Console for each role have been submitted in a `.zip` folder via email. The `OWNER` role has full access to all administrator permissions and can make changes to the architecture, besides accessing metrics and logs. The `AUDITOR` role can only access metrics or logs pertaining to the database, the CloudWatch, as well as the code deployment infrastructure. Upon making the first log-in by using the IAM account credentials (log-in URL, username, and password shared), the users will be prompted to reset the password to one of their own.
 
