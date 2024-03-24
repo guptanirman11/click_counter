@@ -15,7 +15,7 @@ function incrementCounter() {
 
 // Function to fetch global counter value from the server
 function fetchGlobalCounter() {
-    return fetch('http://3.89.220.49:5000/counter', { method: 'GET' })
+    return fetch('https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/counter', { method: 'GET' })
         .then(response => response.json())
         .then(data => {
             setLocalCounter(data.counter);
@@ -26,7 +26,7 @@ function fetchGlobalCounter() {
 
 // Function to update global counter value on the server
 function updateGlobalCounter() {
-    fetch('http://3.89.220.49:5000/click', { method: 'POST' })
+    fetch('https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/click', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             // Option to handle response
