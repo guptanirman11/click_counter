@@ -90,13 +90,13 @@ AWS CloudWatch is utilized for comprehensive monitoring, including reporting cus
 Using the IAM User functionality on AWS, I created the two 'roles' for access -- that of `OWNER` and `AUDITOR`. The credentials for accessing the AWS Management Console for each role have been submitted in a `.zip` folder via email. The `OWNER` role has full access to all administrator permissions and can make changes to the architecture, besides accessing metrics and logs. The `AUDITOR` role can only access metrics or logs pertaining to the database, the CloudWatch, as well as the code deployment infrastructure. Upon making the first log-in by using the IAM account credentials (log-in URL, username, and password shared), the users will be prompted to reset the password to one of their own.
 
 ## API Endpoints
-1) Home Page
+1) **Home Page**
 * Endpoint: `/`
 * Method: `GET`
 * Description: Renders the homepage of the click counter application.
 * Example Request: `curl http://3.89.220.49:5000/`
 
-2) Click
+2) **Click**
 * Endpoint: `/click`
 * Method: `POST`
 * Description:  Increments the counter by one. This endpoint is called every time a click is registered.
@@ -106,7 +106,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
   "message": "Increment queued"
           }```
 
-3) Home Page
+3) **Home Page**
 * Endpoint: `/counter`
 * Method: GET
 * Description: Fetches the current value of the counter from ElasticCache.
