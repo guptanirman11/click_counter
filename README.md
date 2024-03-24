@@ -15,7 +15,8 @@ A click counter application to map the number of clicks made by various users (i
 - We implement the live updates (counter for one user updates as another person clicks it), hence, prioritizing click registration over immediate display updates.
 
 ### High Level Architecture
-![image](https://github.com/guptanirman11/click_counter/assets/114794173/359e04b3-d99e-4dfa-b111-530056af170e)
+![image](https://github.com/guptanirman11/click_counter/assets/114794173/188a14d6-6fdb-420d-a349-b73cb38ee493)
+
 
 
 ## Extra Features
