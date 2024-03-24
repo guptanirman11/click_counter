@@ -1,7 +1,7 @@
 # Project Cloud Clicker  
 This project is a demonstration of CI/CD implementation for deploying a cloud-hosted Flask application with a global click counter feature, ensuring proper access control security and logging of counter clicks. This application also provides an option for live updates and incorporates free tier services from AWS to incorporate scalability and agility.
 
-<img width="1451" alt="Screenshot 2024-03-23 at 1 33 09 AM" src="https://github.com/guptanirman11/click_counter/assets/114794173/a3bfc9d8-add3-41be-bd36-696920377f12">
+![image](https://github.com/guptanirman11/click_counter/assets/114794173/18be85c9-fac9-4f4f-9d5b-cf38d37291ae)
 
 
 ## Salient Features
