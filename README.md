@@ -31,8 +31,8 @@ The following are the key elements of this project (and repository):
 *  The [`app`](https://github.com/guptanirman11/click_counter/tree/main/app) directory on this repository contains the backend and frontend files:
       * [`application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/application.py): the backend framework listening to the API calls, also makes CloudWatch API calls to log metrics
       * [`worker.py`](https://github.com/guptanirman11/click_counter/blob/main/app/worker.py): describes the Pull Worker class able to connect to the cache and methods associated
-      * [`db.py`](https://github.com/guptanirman11/click_counter/blob/main/app/db.py): describe the Cache connection and have methods associated to it.
-      * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ache)
+      * [`db.py`](https://github.com/guptanirman11/click_counter/blob/main/app/db.py): describe the Cache connection and have methods associated with it
+      * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, Cache)
       * [`test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
       * [`templates`](https://github.com/guptanirman11/click_counter/tree/main/app/templates) and [`static`](https://github.com/guptanirman11/click_counter/tree/main/app/static) directories: [`.html`](https://github.com/guptanirman11/click_counter/blob/main/app/templates/index.html), [`.css`](https://github.com/guptanirman11/click_counter/blob/main/app/static/styles.css), and [`.js`](https://github.com/guptanirman11/click_counter/blob/main/app/static/script.js) files required for rendering front-end
       * [`logs`](https://github.com/guptanirman11/click_counter/tree/main/app/logs) directory: [`access.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/access.log) and [`error.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/error.log) files documenting Flask application logs
@@ -81,8 +81,8 @@ I decided to adopt an eventual consistency model to handle high workloads withou
 ## Database/Cache Choice
 The decision to use a cache database like ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent thread safety.
 ### Key-Value Schema
-Key: counter
-Value: An integer value that starts at 0 and increments with each click.
+* Key: counter
+* Value: An integer value that starts at 0 and increments with each click.
 
 
 ## AWS Architecture
