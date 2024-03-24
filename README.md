@@ -81,8 +81,8 @@ I decided to adopt an eventual consistency model to handle high workloads withou
 ## Database/Cache Choice
 The decision to use a cache database like ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent thread safety.
 ### Key-Value Schema
-Key: counter
-Value: An integer value that starts at 0 and increments with each click.
+* Key: counter
+* Value: An integer value that starts at 0 and increments with each click.
 
 
 ## AWS Architecture
