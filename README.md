@@ -94,7 +94,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/`
 * Method: `GET`
 * Description: Renders the homepage of the click counter application.
-* Example Request: curl http://3.89.220.49:5000/ 
+* Example Request: `curl http://3.89.220.49:5000/`
 
 2) Click
 * Endpoint: `/click`
