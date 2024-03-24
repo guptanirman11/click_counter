@@ -12,7 +12,11 @@ A click counter application to map the number of clicks made by various users (i
 
 ### NonFunctional Requiremnts
 - The project focuses on developing a scalable application architecture with increasing number of users to handle write-heavy operations.
-- As we implement the Live updates (counter for one user updates as another person clicks it). Hence, prioritizing click registration over immediate display updates. 
+- As we implement the Live updates (counter for one user updates as another person clicks it). Hence, prioritizing click registration over immediate display updates.
+
+### High Level Architecture
+![image](https://github.com/guptanirman11/click_counter/assets/114794173/359e04b3-d99e-4dfa-b111-530056af170e)
+
 
 ## Extra Features
 * This project weighs in on two divergent approaches to this project to produce a website that allows multiple users to click and store the counts of their clicks. This counter is global (shared among all users throughout the lifetime of the deployment). Multiple users can access the website at the same time, who can all update the counter.
