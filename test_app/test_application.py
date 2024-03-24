@@ -1,5 +1,5 @@
 import pytest
-from application import application
+from app.application import application
 import json
 import time
 

@@ -3,7 +3,7 @@ from flask_cors import CORS
 from worker import PullWorker
 from queue import Queue
 import boto3
-from db import RedisClient
+from DBUtils import RedisClient
 
 # Class for Cloud Clicker Flask App
 class CloudClickerApplication:
