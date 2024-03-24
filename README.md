@@ -1,18 +1,18 @@
 # Project Cloud Clicker  
 
 ## Business Requirement
-A click counter application to map the number of clicks made by various users (including theselves) may or may not be accessing the application at the same time.
+A click counter application to map the number of clicks made by various users (including themselves) may or may not be accessing the application at the same time.
 
-## System Requiremnts
+## System Requirements
 ### Functional Requirements
 - A button that user can click.
 - A counter that shows the total number of times the button has been clicked.
-- Application should be deployed on Cloud Infrastructure with a CI/CD pipeline to automate application deployment process.
-- The Cloud infrastructure should have appropriate access control security. It should log the metrics to geth frequency of the counter clicks.
+- Application should be deployed on cloud infrastructure with a CI/CD pipeline to automate application deployment process.
+- The cloud infrastructure should have appropriate access control security. It should log the metrics to get frequency of the counter clicks.
 
-### NonFunctional Requiremnts
+### Non-Functional Requirements
 - The project focuses on developing a scalable application architecture with increasing number of users to handle write-heavy operations.
-- As we implement the Live updates (counter for one user updates as another person clicks it). Hence, prioritizing click registration over immediate display updates.
+- We implement the live updates (counter for one user updates as another person clicks it), hence, prioritizing click registration over immediate display updates.
 
 ### High Level Architecture
 ![image](https://github.com/guptanirman11/click_counter/assets/114794173/359e04b3-d99e-4dfa-b111-530056af170e)
@@ -42,31 +42,33 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Steps Taken
-To achieve this, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and Code Deploy from Github and robust monitoring through CloudWatch.
+To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub and robust monitoring through CloudWatch.
 
 ## The Two Backend Approaches Explored
 * _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
-This approach involves using a thread-safe operation (lock as supported in Python) on a global variable Counter (A Singleton Class Object) to track clicks, with eventual synchronization with the Database/Cache. 
-Pros:
+This approach involves using a thread-safe operation (lock as supported in Python) on a global variable Counter (A Singleton Class Object) to track clicks, with eventual synchronization with the Database/Cache.
+
+<ins>Pros</ins>:
 1) A Global Counter maintaining consistency of Counter for all the users.
 2) Global access of the class (attributes and associated methods).
 
-Cons:
+<ins>Cons</ins>:
 1) The Critical Section is the Counter object which is the main resource.
-2) As it is a write heavy system, it would not be able to register all the counter clicks as efficently as expected. **With the lock the bottleneck and performance issues will arise as the other threads and requests will keep on spinnind and try to register their count**
+2) As it is a write-heavy system, it would not be able to register all the counter clicks as efficently as expected. **With the lock the bottleneck and performance issues will arise as the other threads and requests will keep on spinning and try to register their count.**
 
 * _**Approach 2: Producer-Consumer Model with Queue**_:
-Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread(A pull Worker) which fetches the value from the queue (until the users are active or my queue in not empty). Here we will be updating the delta to counter in the RedisCache.
-Pros:
+Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread (A Pull Worker) which fetches the value from the queue (until the users are active or my queue in not empty). Here we will be updating the counter with delta in the RedisCache.
+
+<ins>Pros:</ins>
 1) Decouples clicking actions from database updates for improved responsiveness.
 2) We can maintain data integrity through re-queuing failed updates, enhancing reliability.
 3) The queue also acts as a buffer to manage traffic bursts and scales by adding more consumers.
 
-Cons:
+<ins>Cons</ins>:
 1) Latency in Data Visibility as updates to the database are delayed.
 2) Requires strategies to prevent unbounded growth of queue under high load, adding complexity.
 
-**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not the most optimal.**
+**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not optimal.**
 
 ## Live Updates
 Live updates are implemented with a periodic API call to the backend service every 5 seconds, balancing real-time updates with performance considerations to avoid unnecessary API calls. This could be changed eventually depending on the tradeoff between frequency of live updates required versus the number of API requests the system can handle.
@@ -88,54 +90,54 @@ AWS CloudWatch is utilized for comprehensive monitoring, including reporting cus
 Using the IAM User functionality on AWS, I created the two 'roles' for access -- that of `OWNER` and `AUDITOR`. The credentials for accessing the AWS Management Console for each role have been submitted in a `.zip` folder via email. The `OWNER` role has full access to all administrator permissions and can make changes to the architecture, besides accessing metrics and logs. The `AUDITOR` role can only access metrics or logs pertaining to the database, the CloudWatch, as well as the code deployment infrastructure. Upon making the first log-in by using the IAM account credentials (log-in URL, username, and password shared), the users will be prompted to reset the password to one of their own.
 
 ## API Endpoints
-1) Home Page
-Endpoint: `/`
-Method: `GET`
-Description: Renders the homepage of the click counter application.
-Example Request: curl http://3.89.220.49:5000/ 
+1) **Home Page**
+* Endpoint: `/`
+* Method: `GET`
+* Description: Renders the homepage of the click counter application.
+* Example Request: `curl http://3.89.220.49:5000/`
 
-2) Click
-Endpoint: `/click`
-Method: `POST`
-Description:  Increments the counter by one. This endpoint is called every time a click is registered.
-Example Request: curl http://3.89.220.49:5000/click 
-Response : {
+2) **Click**
+* Endpoint: `/click`
+* Method: `POST`
+* Description:  Increments the counter by one. This endpoint is called every time a click is registered.
+* Example Request: `curl http://3.89.220.49:5000/click` 
+* Response :
+       ```{
   "message": "Increment queued"
-}
+          }```
 
-3) Home Page
-Endpoint: `/counter`
-Method: GET
-Description: Fetches the current value of the counter from ElasticCache.
-Example Request: curl http://3.89.220.49:5000/counter 
-Response : {
-  "counter": "42"
-}
+3) **Home Page**
+* Endpoint: `/counter`
+* Method: GET
+* Description: Fetches the current value of the counter from ElasticCache.
+* Example Request: `curl http://3.89.220.49:5000/counter` 
+* Response :
+     ```{"counter": "42"}```
 
 ## Discussion of Access Control Security 
 I considered a few aspects pertaining to access control security in setting up this application:
-* Authorization: Enforcing fine-grained access control policies to determine what actions users or services are allowed to perform within the application 
+* **Authorization**: Enforcing fine-grained access control policies to determine what actions users or services are allowed to perform within the application 
 (manifested through authorization mechanisms based on groups, roles, permissions, and attributes associated with the entities such as `OWNER` or `AUDITOR`) and leveraging the Principle of Least Privilege.
-* Secure Communication: By leveraging the appropriate security groups and IAM roles associated with AWS services, it has been ensured that some restriction is placed on the ports to listen to.
-* Multi-Factor Authentication: Implemented to allow checks on users accessing the system. 
-* Monitoring and Logging: Implement logging and monitoring capabilities to track access to resources.
+* **Secure Communication**: By leveraging the appropriate security groups and IAM roles associated with AWS services, it has been ensured that some restriction is placed on the ports to listen to.
+* **Multi-Factor Authentication**: Implemented to allow checks on users accessing the system. 
+* **Monitoring and Logging**: Implement logging and monitoring capabilities to track access to resources.
 
 
 ## Scope for Improvement
 ### Security:
-Implement HTTPS: Secures client-server communications, protecting against eavesdropping and tampering.
+* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering.
 ### Reliability:
-Implement Robust Testing: Early identification and correction of flaws through integration testing in the CI phase boosts reliability.
-Data Handling and Segregation: Segregating data tasks enhances integrity and reduces errors, improving reliability.
+* **Implementing Robust Testing**: Early identification and correction of flaws through integration testing in the CI phase can help boost reliability.
+* **Data Handling and Segregation**: Segregating data tasks can enhance integrity and reduce errors, improving reliability.
 ### Availability:
-Utilize Load Balancing: Distributes traffic to prevent bottlenecks, enhancing application availability.
-Adaptive Live Updates: Balances load based on user activity, maintaining system responsiveness and availability.
+* **Utilizing Load Balancing**: Distributing traffic to prevent bottlenecks, load balancing would help enhance application availability.
+* **Incorporating Adaptive Live Updates**: By aligning the provision of live updates 'elastically' through an adaptive approach, we can balance load based on user activity, maintaining system responsiveness and availability.
 ### Performance:
-Scale Horizontally: Adds resources to meet demand without straining infrastructure, boosting performance.
-Increase Pull Workers: More workers processing queue items increase throughput and performance.
-Integrate AWS SQS: Using SQS for queuing reduces management overhead, potentially improving performance.
-Utilize Work Stealing: Optimizes resource use by reallocating tasks among workers, enhancing performance.
-Consider Serverless Architecture: Dynamically allocates resources based on demand in a serverless setup, ensuring efficient performance scaling.
+* **Scaling Horizontally**: Adding resources to meet demand without straining infrastructure, boosting performance.
+* **Increasing Pull Workers**: More workers processing queue items can help increase throughput and performance.
+* **Integrating AWS SQS**: Using SQS for queuing reduces management overhead, we can potentially improve performance.
+* **Utilizing Work Stealing**: Optimizing resource use by reallocating tasks among workers as well we can enhance performance.
+* **Further Considering Serverless Architecture**: An alternative infrastructure choice can be explored further depending on priorities, to check if it can help us dynamically allocate resources based on demand through the serverless setup, ensuring efficient performance scaling.
 
 ## Conclusion
 The architectural design and implementation of the project aim to strike a balance between scalability, performance, and cost-effectiveness. By leveraging AWS services, employing efficient design patterns, and considering future scalability needs, the system is well-equipped to handle write-heavy workloads while maintaining optimal performance and reliability.
