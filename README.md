@@ -3,7 +3,7 @@
 ## Business Requirement
 A click counter application to map the number of clicks made by various users (including themselves) may or may not be accessing the application at the same time.
 
-## System Requiremnts
+## System Requirements
 ### Functional Requirements
 - A button that user can click.
 - A counter that shows the total number of times the button has been clicked.
