@@ -1,18 +1,18 @@
 # Project Cloud Clicker  
 
 ## Business Requirement
-A click counter application to map the number of clicks made by various users (including theselves) may or may not be accessing the application at the same time.
+A click counter application to map the number of clicks made by various users (including themselves) may or may not be accessing the application at the same time.
 
 ## System Requiremnts
 ### Functional Requirements
 - A button that user can click.
 - A counter that shows the total number of times the button has been clicked.
-- Application should be deployed on Cloud Infrastructure with a CI/CD pipeline to automate application deployment process.
-- The Cloud infrastructure should have appropriate access control security. It should log the metrics to geth frequency of the counter clicks.
+- Application should be deployed on cloud infrastructure with a CI/CD pipeline to automate application deployment process.
+- The cloud infrastructure should have appropriate access control security. It should log the metrics to get frequency of the counter clicks.
 
-### NonFunctional Requiremnts
+### Non-Functional Requirements
 - The project focuses on developing a scalable application architecture with increasing number of users to handle write-heavy operations.
-- As we implement the Live updates (counter for one user updates as another person clicks it). Hence, prioritizing click registration over immediate display updates.
+- We implement the live updates (counter for one user updates as another person clicks it), hence, prioritizing click registration over immediate display updates.
 
 ### High Level Architecture
 ![image](https://github.com/guptanirman11/click_counter/assets/114794173/359e04b3-d99e-4dfa-b111-530056af170e)
@@ -42,12 +42,13 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Steps Taken
-To achieve this, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and Code Deploy from Github and robust monitoring through CloudWatch.
+To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub and robust monitoring through CloudWatch.
 
 ## The Two Backend Approaches Explored
 * _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
-This approach involves using a thread-safe operation (lock as supported in Python) on a global variable Counter (A Singleton Class Object) to track clicks, with eventual synchronization with the Database/Cache. 
-Pros:
+This approach involves using a thread-safe operation (lock as supported in Python) on a global variable Counter (A Singleton Class Object) to track clicks, with eventual synchronization with the Database/Cache.
+
+<ins>Pros</ins>:
 1) A Global Counter maintaining consistency of Counter for all the users.
 2) Global access of the class (attributes and associated methods).
 
