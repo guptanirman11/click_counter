@@ -29,7 +29,9 @@ A click counter application to map the number of clicks made by various users (i
 The following are the key elements of this project (and repository):
 * The final product is **[this website](http://3.89.220.49:5000)** which is called the `Cloud Clicker` -- a click counter housed on a cloud infrastructure (link: [http://3.89.220.49:5000](http://3.89.220.49:5000)).
 *  The [`app`](https://github.com/guptanirman11/click_counter/tree/main/app) directory on this repository contains the backend and frontend files:
-      * [`application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/application.py): the backend framework listening to the API calls, also makes CloudWatch API calls to log metrics 
+      * [`application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/application.py): the backend framework listening to the API calls, also makes CloudWatch API calls to log metrics
+      * [`worker.py`](https://github.com/guptanirman11/click_counter/blob/main/app/worker.py): describes the Pull Worker class able to connect to the cache and methods associated
+      * [`db.py`](https://github.com/guptanirman11/click_counter/blob/main/app/db.py): describe the Cache connection and have methods associated to it.
       * [`cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/app/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, ache)
       * [`test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
       * [`templates`](https://github.com/guptanirman11/click_counter/tree/main/app/templates) and [`static`](https://github.com/guptanirman11/click_counter/tree/main/app/static) directories: [`.html`](https://github.com/guptanirman11/click_counter/blob/main/app/templates/index.html), [`.css`](https://github.com/guptanirman11/click_counter/blob/main/app/static/styles.css), and [`.js`](https://github.com/guptanirman11/click_counter/blob/main/app/static/script.js) files required for rendering front-end
@@ -78,6 +80,10 @@ I decided to adopt an eventual consistency model to handle high workloads withou
 
 ## Database/Cache Choice
 The decision to use a cache database like ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent thread safety.
+### Key-Value Schema
+Key: counter
+Value: An integer value that starts at 0 and increments with each click.
+
 
 ## AWS Architecture
 The application is deployed on AWS using EC2 instances and ache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
