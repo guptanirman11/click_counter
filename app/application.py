@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
+from worker import PullWorker
 import redis
-import threading
 import time
 from queue import Queue
 import boto3
@@ -25,24 +25,9 @@ def fetch_db_value():
     print(f'fetched: {value}')
     return int(value)
 
-# Background thread function to periodically sync the counter value to the database
-def consumer():
-    """Consumer function that processes items from the queue."""
-    while True:
-
-        # Wait for an item from the queue
-        if not increment_queue.empty():
-            
-            increment = increment_queue.get()
-            # Process the increment
-            redis_conn.incrby('counter', increment)
-            print(f"Processed increment: {increment}")
-            # Indicating that the item has been processed
-            increment_queue.task_done()
-
-"""Starting the background thread."""
-thread = threading.Thread(target=consumer, daemon=True)
-thread.start()
+"""Starting the Worker"""
+worker = PullWorker(host='my-redis-cluster.0diz5e.ng.0001.use1.cache.amazonaws.com', port=6379, db=0, increment_queue=increment_queue)
+worker.start()
 
 '''Rendering the wesite isung rest api endpoint'''
 @app.route('/')

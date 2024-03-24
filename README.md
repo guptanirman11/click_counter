@@ -1,7 +1,20 @@
 # Project Cloud Clicker  
-This project is a demonstration of CI/CD implementation for deploying a cloud-hosted Flask application with a global click counter feature, ensuring proper access control security and logging of counter clicks. This application also provides an option for live updates and incorporates free tier services from AWS to incorporate scalability and agility.
 
-## Salient Features
+## Business Requirement
+A click counter application to map the number of clicks made by various users (including theselves) may or may not be accessing the application at the same time.
+
+## System Requiremnts
+### Functional Requirements
+- A button that user can click.
+- A counter that shows the total number of times the button has been clicked.
+- Application should be deployed on Cloud Infrastructure with a CI/CD pipeline to automate application deployment process.
+- The Cloud infrastructure should have appropriate access control security. It should log the metrics to geth frequency of the counter clicks.
+
+### NonFunctional Requiremnts
+- The project focuses on developing a scalable application architecture with increasing number of users to handle write-heavy operations.
+- As we implement the Live updates (counter for one user updates as another person clicks it). Hence, prioritizing click registration over immediate display updates. 
+
+## Extra Features
 * This project weighs in on two divergent approaches to this project to produce a website that allows multiple users to click and store the counts of their clicks. This counter is global (shared among all users throughout the lifetime of the deployment). Multiple users can access the website at the same time, who can all update the counter.
 * Live updates have been implemented, in a judicious manner.
 * The application runs on every code commit to this repository which is a part of a CI/CD pipeline connecting it to a secure cloud infrastructure with multiple user-roles and a record of metrics/logs.
@@ -22,17 +35,32 @@ The following are the key elements of this project (and repository):
 
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
-## Introduction
-The project focuses on developing a scalable application architecture to handle write-heavy operations, particularly prioritizing click storage over immediate display updates. To achieve this, I explored and implemented two different approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and robust monitoring through CloudWatch.
+## Steps Taken
+To achieve this, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and Elasticache, with a streamlined CI/CD pipeline using AWS CodePipeline and Code Deploy from Github and robust monitoring through CloudWatch.
 
-## Backend Approaches Explored
-* _**Approach 1: Global Variable with Database Sync**_:
-This approach involves using a thread-safe operation (lock as supported in Python) on a global variable (using Singleton Pattern) to track clicks, with eventual synchronization with the database. 
+## The Two Backend Approaches Explored
+* _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
+This approach involves using a thread-safe operation (lock as supported in Python) on a global variable Counter (A Singleton Class Object) to track clicks, with eventual synchronization with the Database/Cache. 
+Pros:
+1) A Global Counter maintaining consistency of Counter for all the users.
+2) Global access of the class (attributes and associated methods).
+
+Cons:
+1) The Critical Section is the Counter object which is the main resource.
+2) As it is a write heavy system, it would not be able to register all the counter clicks as efficently as expected. **With the lock the bottleneck and performance issues will arise as the other threads and requests will keep on spinnind and try to register their count**
 
 * _**Approach 2: Producer-Consumer Model with Queue**_:
-Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread. Here we will be updating the delta to counter in the RedisCache.
+Here, a thread-safe queue is employed to store click requests from users, with a dedicated pull worker responsible for fetching and updating the database. Here the producers are the users whereas consumer is the background thread(A pull Worker) which fetches the value from the queue (until the users are active or my queue in not empty). Here we will be updating the delta to counter in the RedisCache.
+Pros:
+1) Decouples clicking actions from database updates for improved responsiveness.
+2) We can maintain data integrity through re-queuing failed updates, enhancing reliability.
+3) The queue also acts as a buffer to manage traffic bursts and scales by adding more consumers.
 
-**I decided to use the later approach as blocking a resource which would have been the global counter in the first case is not the most optimal -- with locks the bottleneck and performance issues will arise as the other threads and requests will keep on spinnind and try to register their count.**
+Cons:
+1) Latency in Data Visibility as updates to the database are delayed.
+2) Requires strategies to prevent unbounded growth of queue under high load, adding complexity.
+
+**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not the most optimal.**
 
 ## Live Updates
 Live updates are implemented with a periodic API call to the backend service every 5 seconds, balancing real-time updates with performance considerations to avoid unnecessary API calls. This could be changed eventually depending on the tradeoff between frequency of live updates required versus the number of API requests the system can handle.
@@ -40,8 +68,8 @@ Live updates are implemented with a periodic API call to the backend service eve
 ## Consistency Management
 I decided to adopt an eventual consistency model to handle high workloads without introducing significant latency. While strong consistency ensures immediate updates, eventual consistency ensures that all inputs are eventually processed, optimizing performance under heavy load.
 
-## Database Choice
-The decision to use a cache database like Redis or ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent safety.
+## Database/Cache Choice
+The decision to use a cache database like ElastiCache was made based on performance, availability, and scalability requirements. The cache database efficiently handles high write and fetch loads, ensuring concurrent thread safety.
 
 ## AWS Architecture
 The application is deployed on AWS using EC2 instances and Elasticache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
@@ -49,6 +77,31 @@ The application is deployed on AWS using EC2 instances and Elasticache for cachi
 AWS CloudWatch is utilized for comprehensive monitoring, including reporting custom metric data via Boto3 to track the count of clicks. You can locate it under the "MyApplication" namespace with the customised metric name "Clicks". This provides insights into the frequency of clicks, enabling analysis through various options such as total counts, averages, and sum counts over time. Graphical representation typically updates every 5 minutes, aligning with intervals on the x-axis. Multiple other default metrics can also be viewed.
 
 Using the IAM User functionality on AWS, I created the two 'roles' for access -- that of `OWNER` and `AUDITOR`. The credentials for accessing the AWS Management Console for each role have been submitted in a `.zip` folder via email. The `OWNER` role has full access to all administrator permissions and can make changes to the architecture, besides accessing metrics and logs. The `AUDITOR` role can only access metrics or logs pertaining to the database, the CloudWatch, as well as the code deployment infrastructure. Upon making the first log-in by using the IAM account credentials (log-in URL, username, and password shared), the users will be prompted to reset the password to one of their own.
+
+## API Endpoints
+1) Home Page
+Endpoint: `/`
+Method: `GET`
+Description: Renders the homepage of the click counter application.
+Example Request: curl http://3.89.220.49:5000/ 
+
+2) Click
+Endpoint: `/click`
+Method: `POST`
+Description:  Increments the counter by one. This endpoint is called every time a click is registered.
+Example Request: curl http://3.89.220.49:5000/click 
+Response : {
+  "message": "Increment queued"
+}
+
+3) Home Page
+Endpoint: `/counter`
+Method: GET
+Description: Fetches the current value of the counter from ElasticCache.
+Example Request: curl http://3.89.220.49:5000/counter 
+Response : {
+  "counter": "42"
+}
 
 ## Discussion of Access Control Security 
 I considered a few aspects pertaining to access control security in setting up this application:
@@ -60,7 +113,20 @@ I considered a few aspects pertaining to access control security in setting up t
 
 
 ## Scope for Improvement
-To enhance security, HTTPS can be implemented using a registered Domain Name System, though cost considerations influenced the decision for time being. Load balancing and scaling strategies can be employed to handle increasing server demands, alongside optimizations like increasing pull workers for faster queue processing (however, one drawback for this strategy might be that we might have to use multi-threading appraoches for avoiding race conditions). Integration of SQS instead of a custom thread-safe queue can further improve scalability and efficiency. Further testing can also be implemented to make the system more robust.
+### Security:
+Implement HTTPS: Secures client-server communications, protecting against eavesdropping and tampering.
+### Reliability:
+Implement Robust Testing: Early identification and correction of flaws through integration testing in the CI phase boosts reliability.
+Data Handling and Segregation: Segregating data tasks enhances integrity and reduces errors, improving reliability.
+### Availability:
+Utilize Load Balancing: Distributes traffic to prevent bottlenecks, enhancing application availability.
+Adaptive Live Updates: Balances load based on user activity, maintaining system responsiveness and availability.
+### Performance:
+Scale Horizontally: Adds resources to meet demand without straining infrastructure, boosting performance.
+Increase Pull Workers: More workers processing queue items increase throughput and performance.
+Integrate AWS SQS: Using SQS for queuing reduces management overhead, potentially improving performance.
+Utilize Work Stealing: Optimizes resource use by reallocating tasks among workers, enhancing performance.
+Consider Serverless Architecture: Dynamically allocates resources based on demand in a serverless setup, ensuring efficient performance scaling.
 
 ## Conclusion
 The architectural design and implementation of the project aim to strike a balance between scalability, performance, and cost-effectiveness. By leveraging AWS services, employing efficient design patterns, and considering future scalability needs, the system is well-equipped to handle write-heavy workloads while maintaining optimal performance and reliability.
