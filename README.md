@@ -100,7 +100,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/click`
 * Method: `POST`
 * Description:  Increments the counter by one. This endpoint is called every time a click is registered.
-* Example Request: curl http://3.89.220.49:5000/click 
+* Example Request: `curl http://3.89.220.49:5000/click` 
 * Response :
        ```{
   "message": "Increment queued"
@@ -110,36 +110,34 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/counter`
 * Method: GET
 * Description: Fetches the current value of the counter from ElasticCache.
-* Example Request: curl http://3.89.220.49:5000/counter 
+* Example Request: `curl http://3.89.220.49:5000/counter` 
 * Response :
-     ```{
-  "counter": "42"
-     }```
+     ```{"counter": "42"}```
 
 ## Discussion of Access Control Security 
 I considered a few aspects pertaining to access control security in setting up this application:
-* Authorization: Enforcing fine-grained access control policies to determine what actions users or services are allowed to perform within the application 
+* **Authorization**: Enforcing fine-grained access control policies to determine what actions users or services are allowed to perform within the application 
 (manifested through authorization mechanisms based on groups, roles, permissions, and attributes associated with the entities such as `OWNER` or `AUDITOR`) and leveraging the Principle of Least Privilege.
-* Secure Communication: By leveraging the appropriate security groups and IAM roles associated with AWS services, it has been ensured that some restriction is placed on the ports to listen to.
-* Multi-Factor Authentication: Implemented to allow checks on users accessing the system. 
-* Monitoring and Logging: Implement logging and monitoring capabilities to track access to resources.
+* **Secure Communication**: By leveraging the appropriate security groups and IAM roles associated with AWS services, it has been ensured that some restriction is placed on the ports to listen to.
+* **Multi-Factor Authentication**: Implemented to allow checks on users accessing the system. 
+* **Monitoring and Logging**: Implement logging and monitoring capabilities to track access to resources.
 
 
 ## Scope for Improvement
 ### Security:
-* Implementing HTTPS: Secures client-server communications, protecting against eavesdropping and tampering.
+* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering.
 ### Reliability:
-* Implementing Robust Testing: Early identification and correction of flaws through integration testing in the CI phase can help boost reliability.
-* Data Handling and Segregation: Segregating data tasks can enhance integrity and reduce errors, improving reliability.
+* **Implementing Robust Testing**: Early identification and correction of flaws through integration testing in the CI phase can help boost reliability.
+* **Data Handling and Segregation**: Segregating data tasks can enhance integrity and reduce errors, improving reliability.
 ### Availability:
-* Utilizing Load Balancing: Distributing traffic to prevent bottlenecks, load balancing would help enhance application availability.
-* Incorporating Adaptive Live Updates: By aligning the provision of live updates 'elastically' through an adaptive approach, we can balance load based on user activity, maintaining system responsiveness and availability.
+* **Utilizing Load Balancing**: Distributing traffic to prevent bottlenecks, load balancing would help enhance application availability.
+* **Incorporating Adaptive Live Updates**: By aligning the provision of live updates 'elastically' through an adaptive approach, we can balance load based on user activity, maintaining system responsiveness and availability.
 ### Performance:
-* Scaling Horizontally: Adding resources to meet demand without straining infrastructure, boosting performance.
-* Increasing Pull Workers: More workers processing queue items can help increase throughput and performance.
-* Integrating AWS SQS: Using SQS for queuing reduces management overhead, we can potentially improve performance.
-* Utilizing Work Stealing: Optimizing resource use by reallocating tasks among workers as well we can enhance performance.
-* Further Considering Serverless Architecture: An alternative infrastructure choice can be explored further depending on priorities, to check if it can help us dynamically allocate resources based on demand through the serverless setup, ensuring efficient performance scaling.
+* **Scaling Horizontally**: Adding resources to meet demand without straining infrastructure, boosting performance.
+* **Increasing Pull Workers**: More workers processing queue items can help increase throughput and performance.
+* **Integrating AWS SQS**: Using SQS for queuing reduces management overhead, we can potentially improve performance.
+* **Utilizing Work Stealing**: Optimizing resource use by reallocating tasks among workers as well we can enhance performance.
+* **Further Considering Serverless Architecture**: An alternative infrastructure choice can be explored further depending on priorities, to check if it can help us dynamically allocate resources based on demand through the serverless setup, ensuring efficient performance scaling.
 
 ## Conclusion
 The architectural design and implementation of the project aim to strike a balance between scalability, performance, and cost-effectiveness. By leveraging AWS services, employing efficient design patterns, and considering future scalability needs, the system is well-equipped to handle write-heavy workloads while maintaining optimal performance and reliability.
