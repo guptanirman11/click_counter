@@ -49,9 +49,11 @@ class CloudClickerApplication:
             current_counter = self.redis_client.fetch_db_value()
             return jsonify({'counter': current_counter}), 200
 
+cloud_clicker_application = CloudClickerApplication()
+application = cloud_clicker_application.app
 if __name__ == '__main__':
-    cloud_clicker_application = CloudClickerApplication()
-    cloud_clicker_application.app.run(debug=True, use_reloader=False)
+    
+    application.run(debug=True, use_reloader=False)
 
 # Exposing the Flask application instance for Gunicorn
-application = cloud_clicker_application.app
+
