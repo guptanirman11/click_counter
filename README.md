@@ -15,7 +15,8 @@ A click counter application to map the number of clicks made by various users (i
 - We implement the live updates (counter for one user updates as another person clicks it), hence, prioritizing click registration over immediate display updates.
 
 ### High Level Architecture
-![image](https://github.com/guptanirman11/click_counter/assets/114794173/188a14d6-6fdb-420d-a349-b73cb38ee493)
+![image](https://github.com/guptanirman11/click_counter/assets/114794173/42433460-4401-482d-8200-e3a59b76f0e0)
+
 
 
 
@@ -24,7 +25,7 @@ A click counter application to map the number of clicks made by various users (i
 * Live updates have been implemented, in a judicious manner.
 * The application runs on every code commit to this repository which is a part of a CI/CD pipeline connecting it to a secure cloud infrastructure with multiple user-roles and a record of metrics/logs.
 * Logs from the Flask application are documented to allow for debugging, testing, and performance monitoring.
-* API GAteway t0o manage the API calls and securing them with HTTPS.
+* API Gateway to manage the API calls and securing them with HTTPS.
 
 
 ## User Guide 
@@ -38,8 +39,7 @@ The following are the key elements of this project (and repository):
       * [`logs`](https://github.com/guptanirman11/click_counter/tree/main/app/logs) directory: [`access.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/access.log) and [`error.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/error.log) files documenting Flask application logs
       * [`singleton.py`](https://github.com/guptanirman11/click_counter/blob/main/app/singleton.py): singleton global counter approach for reference 
       * [`requirements.txt`](https://github.com/guptanirman11/click_counter/blob/main/app/requirements.txt): containing information regarding all the requirements and subsystems for reproducing this system
-* The [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) directory to automate the CI/CD pipelines and to give instructions for the deployment process.
-      * These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
+* The [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) directory to automate the CI/CD pipelines and to give instructions for the deployment process. These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
 * [`cloud_setup/cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/cloud_setup/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, Cache)
 * [`test_app/test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
 
@@ -47,7 +47,7 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Steps Taken
-To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST htps with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub and robust monitoring through CloudWatch.
+To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST HTTPS requests with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub as well as robust monitoring through CloudWatch.
 
 ## The Two Backend Approaches Explored
 * _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
@@ -74,7 +74,7 @@ Here, a thread-safe queue is employed to store click requests from users, with a
 1) Latency in Data Visibility as updates to the database are delayed.
 2) Requires strategies to prevent unbounded growth of queue under high load, adding complexity.
 
-**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not optimal.**
+**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not optimal for a write heavy system.**
 
 ## Live Updates
 Live updates are implemented with a periodic API call to the backend service every 5 seconds, balancing real-time updates with performance considerations to avoid unnecessary API calls. This could be changed eventually depending on the tradeoff between frequency of live updates required versus the number of API requests the system can handle.
@@ -92,7 +92,7 @@ The decision to use a cache database like ElastiCache was made based on performa
 ## AWS Architecture
 The application is deployed on AWS using EC2 instances and ache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
 
-I have utilised API Gateway acting as a powerful and secure front door to the backend service. It makes the API calls secure and make the application scale as the incoming traffic increases.
+I have utilised APIGateway which acts as a powerful and secure front door to the backend service. It makes the API calls secure and make the application scale as the incoming traffic increases.
 
 AWS CloudWatch is utilized for comprehensive monitoring, including reporting custom metric data via Boto3 to track the count of clicks. You can locate it under the "MyApplication" namespace with the customised metric name "Clicks". This provides insights into the frequency of clicks, enabling analysis through various options such as total counts, averages, and sum counts over time. Graphical representation typically updates every 5 minutes, aligning with intervals on the x-axis. Multiple other default metrics can also be viewed.
 
@@ -112,7 +112,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/click`
 * Method: `POST`
 * Description:  Increments the counter by one. This endpoint is called every time a click is registered.
-* Example Request: `curl'https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/click` (API Gateway Endpoint) 
+* Example Request: `curl https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/click` (API Gateway Endpoint) 
 * Response :
        ```{
   "message": "Increment queued"
@@ -122,7 +122,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/counter`
 * Method: GET
 * Description: Fetches the current value of the counter from ElasticCache.
-* Example Request: `curl 'https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/counter` (API Gateway Endpoint) 
+* Example Request: `curl https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/counter` (API Gateway Endpoint) 
 * Response :
      ```{"counter": "42"}```
 
@@ -137,7 +137,7 @@ I considered a few aspects pertaining to access control security in setting up t
 
 ## Scope for Improvement
 ### Security:
-* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering for the static websit also.
+* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering for the static website as well.
 ### Reliability:
 * **Implementing Robust Testing**: Early identification and correction of flaws through integration testing in the CI phase can help boost reliability.
 * **Data Handling and Segregation**: Segregating data tasks can enhance integrity and reduce errors, improving reliability.
@@ -147,7 +147,7 @@ I considered a few aspects pertaining to access control security in setting up t
 ### Performance:
 * **Scaling Horizontally**: Adding resources to meet demand without straining infrastructure, boosting performance.
 * **Increasing Pull Workers**: More workers processing queue items can help increase throughput and performance.
-* **Integrating AWS SQS**: Using SQS as the architecture becomes distributed i.e. operating across ultiple servers, whereas current queue is is an in-memory, thread-safe queue designed for inter-thread communication within the same application process.
+* **Integrating AWS SQS**: Using SQS as the architecture becomes distributed i.e. operating across multiple servers, whereas current queue is an in-memory, thread-safe queue designed for inter-thread communication within the same application process.
 * **Utilizing Work Stealing**: Optimizing resource use by reallocating tasks among workers as well we can enhance performance.
 * **Further Considering Serverless Architecture**: An alternative infrastructure choice can be explored further depending on priorities, to check if it can help us dynamically allocate resources based on demand through the serverless setup, ensuring efficient performance scaling.
 
