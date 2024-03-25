@@ -13,6 +13,7 @@ class CloudClickerApplication:
 
         # Redis cache object from db.py
         self.redis_client = RedisClient()
+        self.redis_client.reset_counter()
         self.increment_queue = Queue()
         
 
@@ -35,7 +36,7 @@ class CloudClickerApplication:
         # registers the click event and put in the queue
         @self.app.route('/click', methods=['POST'])
         def click():
-            self.increment_queue.put(300)
+            self.increment_queue.put(1)
             print("Click Registered")
             self.cloudwatch.put_metric_data(
                 Namespace='MyApplication',
