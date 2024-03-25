@@ -13,7 +13,6 @@ class CloudClickerApplication:
 
         # Redis cache object from db.py
         self.redis_client = RedisClient()
-        self.redis_client.reset_counter()
         self.increment_queue = Queue()
         
 
