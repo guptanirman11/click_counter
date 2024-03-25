@@ -7,7 +7,7 @@ Type=idle
 Restart=on-failure
 User=ec2-user
 WorkingDirectory=/home/ec2-user/app
-ExecStart=/usr/local/bin/gunicorn -b 0.0.0.0:5000 application:application --access-logfile /home/ec2-user/app/logs/access.log --error-logfile /home/ec2-user/app/logs/error.log
+ExecStart=/usr/local/bin/gunicorn -b 0.0.0.0:5000 application:application --access-logfile /home/ec2-user/logs/access.log --error-logfile /home/ec2-user/logs/error.log
 
 [Install]
 WantedBy=multi-user.target
