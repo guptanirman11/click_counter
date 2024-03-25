@@ -39,8 +39,7 @@ The following are the key elements of this project (and repository):
       * [`logs`](https://github.com/guptanirman11/click_counter/tree/main/app/logs) directory: [`access.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/access.log) and [`error.log`](https://github.com/guptanirman11/click_counter/blob/main/app/logs/error.log) files documenting Flask application logs
       * [`singleton.py`](https://github.com/guptanirman11/click_counter/blob/main/app/singleton.py): singleton global counter approach for reference 
       * [`requirements.txt`](https://github.com/guptanirman11/click_counter/blob/main/app/requirements.txt): containing information regarding all the requirements and subsystems for reproducing this system
-* The [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) directory to automate the CI/CD pipelines and to give instructions for the deployment process.
-           * These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
+* The [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) directory to automate the CI/CD pipelines and to give instructions for the deployment process. These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
 * [`cloud_setup/cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/cloud_setup/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, Cache)
 * [`test_app/test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
 
@@ -138,7 +137,7 @@ I considered a few aspects pertaining to access control security in setting up t
 
 ## Scope for Improvement
 ### Security:
-* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering for the static websit also.
+* **Implementing HTTPS**: Secures client-server communications, protecting against eavesdropping and tampering for the static website as well.
 ### Reliability:
 * **Implementing Robust Testing**: Early identification and correction of flaws through integration testing in the CI phase can help boost reliability.
 * **Data Handling and Segregation**: Segregating data tasks can enhance integrity and reduce errors, improving reliability.
