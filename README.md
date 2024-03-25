@@ -112,7 +112,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/click`
 * Method: `POST`
 * Description:  Increments the counter by one. This endpoint is called every time a click is registered.
-* Example Request: `curl'https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/click` (API Gateway Endpoint) 
+* Example Request: `curl https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/click` (API Gateway Endpoint) 
 * Response :
        ```{
   "message": "Increment queued"
@@ -122,7 +122,7 @@ Using the IAM User functionality on AWS, I created the two 'roles' for access --
 * Endpoint: `/counter`
 * Method: GET
 * Description: Fetches the current value of the counter from ElasticCache.
-* Example Request: `curl 'https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/counter` (API Gateway Endpoint) 
+* Example Request: `curl https://4ifqmulwvl.execute-api.us-east-1.amazonaws.com/testing/counter` (API Gateway Endpoint) 
 * Response :
      ```{"counter": "42"}```
 
