@@ -4,6 +4,7 @@ class RedisClient:
     # Establishes the connection
     def __init__(self, host='my-redis-cluster.0diz5e.ng.0001.use1.cache.amazonaws.com', port=6379, db=0):
         self.redis_conn = redis.StrictRedis(host=host, port=port, db=db, decode_responses=True)
+        self.redis_conn.set('counter', 0)
 
     # Method to fetch the value
     def fetch_db_value(self):
