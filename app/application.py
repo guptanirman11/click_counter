@@ -14,6 +14,7 @@ class CloudClickerApplication:
         # Redis cache object from db.py
         self.redis_client = RedisClient()
         self.increment_queue = Queue()
+        self.redis_client.reset_counter()
 
         # CloudWatch Setup
         self.cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')

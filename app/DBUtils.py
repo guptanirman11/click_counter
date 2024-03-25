@@ -14,3 +14,7 @@ class RedisClient:
     # Method to increment the counter
     def increment_counter(self, increment=1):
         self.redis_conn.incrby('counter', increment)
+
+    def reset_counter(self):
+       self.redis_conn.set('counter', 0)
+       print('Counter reset to 0')
