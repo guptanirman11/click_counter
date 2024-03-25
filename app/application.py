@@ -13,7 +13,6 @@ class CloudClickerApplication:
 
         # Redis cache object from db.py
         self.redis_client = RedisClient()
-        self.redis_client.reset_counter()
         self.increment_queue = Queue()
         
 
@@ -56,5 +55,4 @@ if __name__ == '__main__':
     
     application.run(debug=True, use_reloader=False)
 
-# Exposing the Flask application instance for Gunicorn
 

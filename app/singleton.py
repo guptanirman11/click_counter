@@ -4,11 +4,10 @@ import redis
 import threading
 import time
 
-# Initialize Redis connection
+# Initializing Redis connection
 redis_conn = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
 def fetch_db_value():
-    # Use Redis GET. If the key doesn't exist, initialize it to 0.
     value = redis_conn.get('counter') or 0
     print(f'fetched: {value}')
     return int(value)
@@ -37,7 +36,6 @@ CORS(app)
 counter = Counter()
 
 # Background thread to periodically sync the counter value to the database
-# With Redis being more performant, you might not need this, but it's here for consistency
 def background_sync():
     while True:
         time.sleep(10)
