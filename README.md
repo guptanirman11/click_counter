@@ -48,7 +48,7 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Steps Taken
-To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST htps with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub and robust monitoring through CloudWatch.
+To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST https requests with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub as well as robust monitoring through CloudWatch.
 
 ## The Two Backend Approaches Explored
 * _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
@@ -93,7 +93,7 @@ The decision to use a cache database like ElastiCache was made based on performa
 ## AWS Architecture
 The application is deployed on AWS using EC2 instances and ache for caching. The choice of EC2 over a Lambda Function was driven by the need for background thread execution. Automation of cloud infrastructure setup was achieved, with CI/CD pipeline integration through AWS CodePipeline and CodeDeploy for streamlined deployment. I scripted an [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) to set up the pipeline. 
 
-I have utilised API Gateway acting as a powerful and secure front door to the backend service. It makes the API calls secure and make the application scale as the incoming traffic increases.
+I have utilised APIGateway which acts as a powerful and secure front door to the backend service. It makes the API calls secure and make the application scale as the incoming traffic increases.
 
 AWS CloudWatch is utilized for comprehensive monitoring, including reporting custom metric data via Boto3 to track the count of clicks. You can locate it under the "MyApplication" namespace with the customised metric name "Clicks". This provides insights into the frequency of clicks, enabling analysis through various options such as total counts, averages, and sum counts over time. Graphical representation typically updates every 5 minutes, aligning with intervals on the x-axis. Multiple other default metrics can also be viewed.
 
