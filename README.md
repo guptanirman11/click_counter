@@ -40,7 +40,7 @@ The following are the key elements of this project (and repository):
       * [`singleton.py`](https://github.com/guptanirman11/click_counter/blob/main/app/singleton.py): singleton global counter approach for reference 
       * [`requirements.txt`](https://github.com/guptanirman11/click_counter/blob/main/app/requirements.txt): containing information regarding all the requirements and subsystems for reproducing this system
 * The [`appspec.yml`](https://github.com/guptanirman11/click_counter/blob/main/appspec.yml) file which utilises bach scripts inside [`code_deploy_scripts`](https://github.com/guptanirman11/click_counter/tree/main/code_deploy_scripts) directory to automate the CI/CD pipelines and to give instructions for the deployment process.
-      * These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
+           * These files install dependencies, and run the Flask service using [`app.service`](https://github.com/guptanirman11/click_counter/blob/main/code_deploy_scripts/app.service) file. 
 * [`cloud_setup/cloud_setup.py`](https://github.com/guptanirman11/click_counter/blob/main/cloud_setup/cloud_setup.py): cloud infrastructure (creating AWS security group, EC2 instance, Cache)
 * [`test_app/test_application.py`](https://github.com/guptanirman11/click_counter/blob/main/app/test_application.py): unit test-cases for API calls, final sanitary checks ran before deploying on AWS
 
