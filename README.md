@@ -148,7 +148,7 @@ I considered a few aspects pertaining to access control security in setting up t
 ### Performance:
 * **Scaling Horizontally**: Adding resources to meet demand without straining infrastructure, boosting performance.
 * **Increasing Pull Workers**: More workers processing queue items can help increase throughput and performance.
-* **Integrating AWS SQS**: Using SQS as the architecture becomes distributed i.e. operating across ultiple servers, whereas current queue is is an in-memory, thread-safe queue designed for inter-thread communication within the same application process.
+* **Integrating AWS SQS**: Using SQS as the architecture becomes distributed i.e. operating across multiple servers, whereas current queue is an in-memory, thread-safe queue designed for inter-thread communication within the same application process.
 * **Utilizing Work Stealing**: Optimizing resource use by reallocating tasks among workers as well we can enhance performance.
 * **Further Considering Serverless Architecture**: An alternative infrastructure choice can be explored further depending on priorities, to check if it can help us dynamically allocate resources based on demand through the serverless setup, ensuring efficient performance scaling.
 
