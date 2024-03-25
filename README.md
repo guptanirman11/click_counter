@@ -25,7 +25,7 @@ A click counter application to map the number of clicks made by various users (i
 * Live updates have been implemented, in a judicious manner.
 * The application runs on every code commit to this repository which is a part of a CI/CD pipeline connecting it to a secure cloud infrastructure with multiple user-roles and a record of metrics/logs.
 * Logs from the Flask application are documented to allow for debugging, testing, and performance monitoring.
-* API GAteway t0o manage the API calls and securing them with HTTPS.
+* API Gateway to manage the API calls and securing them with HTTPS.
 
 
 ## User Guide 
@@ -48,7 +48,7 @@ The following are the key elements of this project (and repository):
 Below, I discuss some of these elements in depth, as well as detail some discussion on some of my choices as well as the future scope of this project.
 
 ## Steps Taken
-To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST https requests with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub as well as robust monitoring through CloudWatch.
+To achieve the functional and non-functional requirements of the project, I explored and implemented two different backend design approaches, each with its own architectural design considerations and trade-offs. The architecture is deployed on AWS, leveraging services like EC2 and ElastiCache, API Gateway for GET and POST HTTPS requests with a streamlined CI/CD pipeline using AWS CodePipeline and CodeDeploy from GitHub as well as robust monitoring through CloudWatch.
 
 ## The Two Backend Approaches Explored
 * _**Approach 1: Singleton Design Principle with Database/Cache Sync**_:
