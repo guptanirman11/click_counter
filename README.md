@@ -74,7 +74,7 @@ Here, a thread-safe queue is employed to store click requests from users, with a
 1) Latency in Data Visibility as updates to the database are delayed.
 2) Requires strategies to prevent unbounded growth of queue under high load, adding complexity.
 
-**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not optimal.**
+**I decided to use the latter approach as blocking a resource which would have been the global counter in the first case is not optimal for a write heavy system.**
 
 ## Live Updates
 Live updates are implemented with a periodic API call to the backend service every 5 seconds, balancing real-time updates with performance considerations to avoid unnecessary API calls. This could be changed eventually depending on the tradeoff between frequency of live updates required versus the number of API requests the system can handle.
