@@ -53,6 +53,5 @@ cloud_clicker_application = CloudClickerApplication()
 application = cloud_clicker_application.app
 if __name__ == '__main__':
     
-    application.run(debug=True, use_reloader=False)
-
+    application.run(host="0.0.0.0", port=5000,debug=True, use_reloader=False)
 
